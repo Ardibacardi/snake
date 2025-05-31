@@ -19,11 +19,16 @@ if (!food) {
 }
 
 while (!WindowShouldClose()) {
+    if (snake->snakeLength <= 0) {
+        break;
+    }
+    
     BeginDrawing();
     ClearBackground(RAYWHITE);
     UpdateSnake(snake, food);
     DrawSnake(snake);
     DrawFood(food);
+    DrawText(TextFormat("Score: %d", GetScore(snake)), 10, 10, 20, BLACK);
 
     EndDrawing();
 }

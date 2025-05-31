@@ -91,7 +91,7 @@ void UpdateSnakePosition(struct Snake* snake, struct Food* food) {
     if (newX < 0 || newX >= GetScreenWidth() / 20 || newY < 0 || newY >= GetScreenHeight() / 20) {
         // Handle collision (e.g., reset game or end game)
         printf("Game Over! Snake hit the wall.\n");
-        ResetGame(&snake, food); 
+        EndGame(snake, food); 
         return;
     }
     // Check for self-collision
@@ -99,7 +99,7 @@ void UpdateSnakePosition(struct Snake* snake, struct Food* food) {
         if (newX == snake->positions[i].x && newY == snake->positions[i].y) {
             // Handle collision (e.g., reset game or end game)
             printf("Game Over! Snake collided with itself.\n");
-            ResetGame(&snake, food); 
+            EndGame(snake, food); 
             return;
         }
     }
@@ -139,29 +139,22 @@ void UpdateSnake(struct Snake* snake, struct Food* food) {
     CheckCollision(snake, food);
 }
 
-void ResetGame(struct Snake** snake, struct Food* food) {
-    printf("Resetting game...\n");
-    printf("Old snake pointer: %p\n", (void*)*snake);
+void EndGame(struct Snake* snake, struct Food* food) {
+    printf("Ending game...\n");
 
-    FreeSnake(*snake);
-    free(food);
 
     // Display restart screen
     while (!IsKeyPressed(KEY_SPACE)) {
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawText("Press SPACE to restart", GetScreenWidth() / 2 - MeasureText("Press SPACE to restart", 20) / 2, GetScreenHeight() / 2, 20, WHITE);
+        DrawText("Game Over!", GetScreenWidth() / 2 - MeasureText("Game Over!", 40) / 2, GetScreenHeight() / 2 - 20, 40, RED);
+        DrawText("Press SPACE to end", GetScreenWidth() / 2 - MeasureText("Press SPACE to end", 20) / 2, GetScreenHeight() / 2, 20, WHITE);
         EndDrawing();
     }
+    snake->snakeLength = 0; // Set snake length to 0 to indicate game over
+}
 
-    *snake = CreateSnake(5, 0, 10);
-    if (!(*snake)) {
-        fprintf(stderr, "Failed to create snake\n");
-        exit(1);
-    }
-
-    printf("New snake pointer: %p\n", (void*)*snake);
-
-    UpdateFood(food, GetScreenWidth(), GetScreenHeight());
-
+int GetScore(struct Snake* snake) {
+    // The score can be defined as the length of the snake minus the initial length
+    return snake->snakeLength - 5; // Assuming initial length is 5
 }

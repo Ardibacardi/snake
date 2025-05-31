@@ -23,4 +23,5 @@ void UpdateSnakePosition(struct Snake* snake, struct Food* food);
 void UpdateSnake(struct Snake* snake, struct Food* food);
 void UpdateFood(struct Food* food, int screenWidth, int screenHeight);
 void CheckCollision(struct Snake* snake, struct Food* food);
-void ResetGame(struct Snake** snake, struct Food* food);
+void EndGame(struct Snake* snake, struct Food* food);
+int GetScore(struct Snake* snake);
